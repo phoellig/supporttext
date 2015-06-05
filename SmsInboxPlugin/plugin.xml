@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+           id="SmsInboxPlugin"
+      version="1.0.0">
+    <name>SmsInboxPlugin</name>
+    <description>Phonegap SMS reception plugin</description>
+    <license>MIT License</license>
+    <keywords></keywords>
+    <engines>
+      <engine name="cordova-android" version=">=4.0.0-dev" />
+    </engines>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="SmsInboxPlugin" >
+                <param name="android-package" value="org.apache.cordova.plugin.smsinboxplugin.SmsInboxPlugin"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/SmsInboxPlugin.java" target-dir="src/org/apache/cordova/smsinboxplugin" />
+        <source-file src="src/android/SmsReceiver.java" target-dir="src/org/apache/cordova/smsinboxplugin" />
+
+        <js-module src="SmsInboxPlugin.js" name="SmsInboxPlugin">
+            <runs />
+        </js-module>
+    </platform>
+</plugin>
