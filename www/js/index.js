@@ -98,7 +98,7 @@ var app = {
             app.scope.messages = result;
             app.rebuildListDOM();
         }, function (result) {
-            console.log(result);
+            console.warn(result);
             app.scope.errors = result;
             app.rebuildListDOM();
         });
