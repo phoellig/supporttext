@@ -19,6 +19,8 @@
 var app = {
     // Application Constructor
     initialize: function() {
+        console.log("Current JST are: " + window.JST);
+
         this.bindEvents();
     },
     // Bind Event Listeners
@@ -35,21 +37,26 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
     },
+    elem : {
+        statusElement: null
+    },
+    changeStatus : function(statusString) {
+        this.statusElement.html(statusString);
+    },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = $(document.getElementById(id));
+        this.changeStatus("Loading things...");
 
-        var statusElement = $("#status");
-        statusElement.html("Loading...");
         var listElement = $("#mainContent ul");
-        listElement.html(this.buildListDOM(this.sampleMessages));
-
-        console.log('Received Event: ' + id);
+        var builtDom = this.buildListDOM(this.sampleMessages);
+        listElement.html(builtDom);
+        this.changeStatus("");
     },
     sampleMessages : [
         {
-            title : "Test title A",
-            blurb : "Very important things have failed",
+            title : "Not A Real Title",
+            blurb : "Very important stuff has failed",
             time: "6:56 AM EST"
         },
         {
@@ -66,8 +73,9 @@ var app = {
     buildListDOM: function(messages) {
         var dom = "";
         _.each(messages, function(message) {
-            dom += _.template(JST["www/template/_listItem.html"](message))
+            dom += window.JST["www/template/listItem.html"](message);
         });
+        console.log("dom:" + dom);
         return dom;
     }
 };
