@@ -68,13 +68,37 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
+        var parentElement = $(document.getElementById(id));
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-		
+        var statusElement = $("#status");
+        statusElement.html("Loading...");
+        var listElement = $("#mainContent ul");
+        listElement.html(this.buildListDOM(this.sampleMessages));
         console.log('Received Event: ' + id);
+    },
+    sampleMessages : [
+        {
+            title : "Test title A",
+            blurb : "Very important things have failed",
+            time: "6:56 AM EST"
+        },
+        {
+            title : "Test title B",
+            blurb : "Fallout 4 is released. Drop everything.",
+            time: "6:20 PM CST"
+        },
+        {
+            title : "Real title. Not a test.",
+            blurb : "Please ignore this test.",
+            time: "5:20 AM PDT"
+        }
+    ],
+    buildListDOM: function(messages) {
+        var dom = "";
+        _.each(messages, function(message) {
+            dom += _.template(JST["www/template/_listItem.html"](message))
+        });
+        return dom;
     }
 };
