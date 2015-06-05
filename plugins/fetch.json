@@ -18,7 +18,7 @@
     "SmsInboxPlugin": {
         "source": {
             "type": "local",
-            "path": "../SmsInboxPlugin"
+            "path": "SmsInboxPlugin"
         },
         "is_top_level": true,
         "variables": {}

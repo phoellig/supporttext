@@ -139,7 +139,9 @@ public class SmsInboxPlugin extends CordovaPlugin {
                     List<List<String>> messages = new ArrayList<List<String>>();
                     do {
                         List<String> message = new ArrayList<String>();
-                        message.add(cursor.getString(cursor.getColumnIndex("address")));
+                        String address = cursor.getString(cursor.getColumnIndex("address"));
+						System.out.println("Message from: " + address);
+                        message.add(address);
                         message.add(cursor.getString(cursor.getColumnIndex("date")));
                         message.add(cursor.getString(cursor.getColumnIndex("body")));
 
