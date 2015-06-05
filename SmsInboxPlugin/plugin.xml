@@ -17,8 +17,8 @@
             </feature>
         </config-file>
 
-        <source-file src="src/android/SmsInboxPlugin.java" target-dir="src/org/apache/cordova/smsinboxplugin" />
-        <source-file src="src/android/SmsReceiver.java" target-dir="src/org/apache/cordova/smsinboxplugin" />
+        <source-file src="src/android/SmsInboxPlugin.java" target-dir="src/org/apache/cordova/plugin/smsinboxplugin" />
+        <source-file src="src/android/SmsReceiver.java" target-dir="src/org/apache/cordova/plugin/smsinboxplugin" />
 
         <js-module src="SmsInboxPlugin.js" name="SmsInboxPlugin">
             <runs />
