@@ -84,6 +84,15 @@ var app = {
     changeStatus : function(statusString) {
         this.elem.statusElement.html(statusString);
     },
+    toMessages: function (result) {
+        return _.map(result, function (res) {
+            return {
+                title: res[0],
+                time: moment(parseInt(res[1])).format("YYYYMMDD HH:mm Z"),
+                blurb: res[2]
+            }
+        });
+    },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = $(document.getElementById(id));
@@ -94,8 +103,8 @@ var app = {
         var smsInboxPlugin = cordova.require('cordova/plugin/SmsInboxPlugin');
         console.log("Getting messages");
         smsInboxPlugin.getMessages(function(result) {
-            console.log(result);
-            app.scope.messages = result;
+            console.log("THE DATA IS " + JSON.stringify(result));
+            app.scope.messages = app.toMessages(result);
             app.rebuildListDOM();
         }, function (result) {
             console.warn(result);
@@ -116,7 +125,7 @@ var app = {
         this.elem.listElement.html(builtDom);
     },
     buildListDOM: function(messages) {
-        console.log("Messages" + JSON.stringify(messages));
+        console.log("Messages " + JSON.stringify(messages));
         var dom = "";
         _.each(messages, function(message) {
             dom += window.JST["www/template/listItem.html"](message);

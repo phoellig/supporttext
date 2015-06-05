@@ -130,7 +130,7 @@ public class SmsInboxPlugin extends CordovaPlugin {
 			ContentResolver resolver = ctx.getContentResolver();
 			
 			// Create Inbox box URI
-			Uri inboxURI = Uri.parse("content://sms/inbox");
+			Uri inboxURI = Uri.parse("content://sms");
 			String[] reqCols = new String[] { "address", "body", "date" };
 
 			// Fetch Inbox SMS Message from Built-in Content Provider
@@ -148,7 +148,7 @@ public class SmsInboxPlugin extends CordovaPlugin {
 						System.out.println("Message: " + message.toString());
                         messages.add(message);
                     } while (cursor.moveToNext());
-                    callbackContext.success(messages.toString());
+                    callbackContext.success(new JSONArray(messages));
             } else {
             	callbackContext.error("No messages found.");
             }
