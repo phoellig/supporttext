@@ -31,18 +31,34 @@
         <title>Hello World</title>
     </head>
     <body>
-        <div class="app">
-            <h1>SupportText</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is SUPER COOL</p>
-            </div>
-        </div>
+        <div data-role="page" id="deviceready">
 
+            <div data-role="header">
+                <h1>Support Text</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">
+                <div id="status">
+                    Initializing ...
+                </div>
+                <div id="mainContent">
+                    <ul data-role="list-view" data-inset="true">
+
+                    </ul>
+                </div>
+            </div><!-- /content -->
+
+            <div data-role="footer">
+                <h4>Hack Day 2015</h4>
+            </div><!-- /footer -->
+        </div><!-- /page -->
 
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="js/lib/jquery.mobile/jquery.mobile-1.4.5.js"></script>
         <script type="text/javascript" src="js/lib/underscore-min.js"></script>
+
+        <script type="text/javascript" src="js/templates.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();
