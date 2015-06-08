@@ -84,11 +84,16 @@ var app = {
     changeStatus : function(statusString) {
         this.elem.statusElement.html(statusString);
     },
+    /**
+     * Message is stored as array of string [address, subject, body, person, date]
+     * @param result
+     * @returns {Array|*}
+     */
     toMessages: function (result) {
         return _.map(result, function (res) {
             return {
                 title: res[0],
-                time: moment(parseInt(res[1])).format("YYYYMMDD HH:mm Z"),
+                time: moment(parseInt(res[4])).format("YYYYMMDD HH:mm Z"),
                 blurb: res[2]
             }
         });

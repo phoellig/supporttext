@@ -37,6 +37,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -51,7 +52,7 @@ public class SmsInboxPlugin extends CordovaPlugin {
 	public final String ACTION_GET_MESSAGES = "getMessages";
 	
 	private CallbackContext callback_receive;
-	private SmsReceiver smsReceiver = null;
+	private org.apache.cordova.plugin.smsinboxplugin.SmsReceiver smsReceiver = null;
 	private boolean isReceiving = false;
 	
 	public SmsInboxPlugin() {
@@ -114,41 +115,22 @@ public class SmsInboxPlugin extends CordovaPlugin {
 			this.isReceiving = false;
 			
 			// 1. Stop the receiving context
-			PluginResult pluginResult = new PluginResult(
-					PluginResult.Status.NO_RESULT);
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
 			pluginResult.setKeepCallback(false);
 			this.callback_receive.sendPluginResult(pluginResult);
 			
 			// 2. Send result for the current context
-			pluginResult = new PluginResult(
-					PluginResult.Status.OK);
+			pluginResult = new PluginResult(PluginResult.Status.OK);
 			callbackContext.sendPluginResult(pluginResult);
 			
 			return true;
 		} else if (action.equals(ACTION_GET_MESSAGES)) {
 			Activity ctx = this.cordova.getActivity();
 			ContentResolver resolver = ctx.getContentResolver();
-			
-			// Create Inbox box URI
-			Uri inboxURI = Uri.parse("content://sms");
-			String[] reqCols = new String[] { "address", "body", "date" };
-
-			// Fetch Inbox SMS Message from Built-in Content Provider
-			Cursor cursor = resolver.query(inboxURI, reqCols, null, null, null);
-			if (cursor != null && cursor.moveToFirst()) {
-                    List<List<String>> messages = new ArrayList<List<String>>();
-                    do {
-                        List<String> message = new ArrayList<String>();
-                        String address = cursor.getString(cursor.getColumnIndex("address"));
-						System.out.println("Message from: " + address);
-                        message.add(address);
-                        message.add(cursor.getString(cursor.getColumnIndex("date")));
-                        message.add(cursor.getString(cursor.getColumnIndex("body")));
-
-						System.out.println("Message: " + message.toString());
-                        messages.add(message);
-                    } while (cursor.moveToNext());
-                    callbackContext.success(new JSONArray(messages));
+            Cursor cursor = getCursor(resolver);
+            if (cursor != null && cursor.moveToFirst()) {
+                callbackContext.success(new JSONArray(getMessages(cursor)));
+                cursor.close();
             } else {
             	callbackContext.error("No messages found.");
             }
@@ -157,4 +139,44 @@ public class SmsInboxPlugin extends CordovaPlugin {
 
 		return false;
 	}
+
+    private static final String[] queriedColumns = new String[] {
+            Telephony.Sms.Inbox.ADDRESS,
+            Telephony.Sms.Inbox.SUBJECT,
+            Telephony.Sms.Inbox.BODY,
+            Telephony.Sms.Inbox.CREATOR,
+            Telephony.Sms.Inbox.DATE
+
+    };
+
+    private Cursor getCursor(ContentResolver cr) {
+        String selection = null;
+        String[] selectionArgs = null;
+//        String selection = Telephony.Sms.Inbox.ADDRESS + " LIKE ?";
+//        String[] selectionArgs = new String[] {
+//                "%twosigma%"
+//        };
+
+        return cr.query(Telephony.Sms.Inbox.CONTENT_URI,
+                queriedColumns,
+                selection,
+                selectionArgs,
+                "date ASC");
+    }
+
+    private List<List<String>> getMessages(Cursor cursor) {
+        List<List<String>> messages = new ArrayList<List<String>>();
+        do {
+            List<String> message = new ArrayList<String>();
+            String address = cursor.getString(cursor.getColumnIndex(Telephony.Sms.Inbox.ADDRESS));
+            System.out.println("Message from: " + address);
+            for (String colName : queriedColumns) {
+                message.add(cursor.getString(cursor.getColumnIndexOrThrow(colName)));
+            }
+
+            System.out.println("Message: " + message.toString());
+            messages.add(message);
+        } while (cursor.moveToNext());
+        return messages;
+    }
 }
